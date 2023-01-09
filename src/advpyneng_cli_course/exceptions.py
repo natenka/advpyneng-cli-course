@@ -1,6 +1,6 @@
 class AdvPynengError(Exception):
     """
-    Ошибка в использовании/работе скрипта pyneng
+    Ошибка в использовании/работе скрипта apyneng
     """
 
 

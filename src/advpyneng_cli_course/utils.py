@@ -115,7 +115,7 @@ def get_repo(search_pattern=STUDENT_REPO_TEMPLATE):
         raise AdvPynengError(
             red(
                 f"Не найден репозиторий {STUDENT_REPO_TEMPLATE}. "
-                f"pyneng надо вызывать в репозитории подготовленном для курса."
+                f"apyneng надо вызывать в репозитории подготовленном для курса."
             )
         )
 
@@ -175,7 +175,7 @@ def send_tasks_to_check(
 ):
     """
     Функция отбирает все задания, которые прошли
-    тесты при вызове pyneng, делает git add для файлов заданий,
+    тесты при вызове apyneng, делает git add для файлов заданий,
     git commit с сообщением какие задания сделаны
     и git push для добавления изменений на Github.
     После этого к этому коммиту добавляется сообщение о том,
@@ -209,17 +209,15 @@ def send_tasks_to_check(
     )
     hint = (
         "Все задания раздела можно сдать командой:\n"
-        "[green on black]pyneng -c[/]\n\n"
-        "Не забудьте посмотреть варианты решения и комментарии в проверке.\n"
-        "Как посмотреть варианты решения:\n"
-        "[white on black]pyneng -a[/]"
+        "[green on black]apyneng -c[/]\n\n"
+        "Не забудьте посмотреть комментарии после проверки.\n"
     )
     rprint(Padding(hint, (1, 0, 1, 4)))
 
 
 def current_chapter_id():
     """
-    Функция возвращает номер текущего раздела, где вызывается pyneng.
+    Функция возвращает номер текущего раздела, где вызывается apyneng.
     """
     current_chapter_name = current_dir_name()
     current_chapter = int(current_chapter_name.split("_")[0])
@@ -279,10 +277,10 @@ def copy_answers(passed_tasks):
 
     homedir = pathlib.Path.home()
     os.chdir(homedir)
-    if os.path.exists("pyneng-answers"):
-        shutil.rmtree("pyneng-answers", onerror=remove_readonly)
-    git_clone_repo(ANSWERS_URL, "pyneng-answers")
-    os.chdir(os.path.join("pyneng-answers", "answers", current_chapter_name))
+    if os.path.exists("advpyneng-answers"):
+        shutil.rmtree("advpyneng-answers", onerror=remove_readonly)
+    git_clone_repo(ANSWERS_URL, "advpyneng-answers")
+    os.chdir(os.path.join("advpyneng-answers", "answers", current_chapter_name))
     copy_answer_files(passed_tasks, pth)
     print(
         green(
@@ -291,7 +289,7 @@ def copy_answers(passed_tasks):
         )
     )
     os.chdir(homedir)
-    shutil.rmtree("pyneng-answers", onerror=remove_readonly)
+    shutil.rmtree("advpyneng-answers", onerror=remove_readonly)
     os.chdir(pth)
 
 
@@ -310,7 +308,7 @@ def copy_answer_files(passed_tasks, pth):
 
 
 def clone_or_pull_task_repo():
-    course_tasks_repo_dir = ".pyneng-course-tasks"
+    course_tasks_repo_dir = ".advpyneng-course-tasks"
     source_pth = str(pathlib.Path().absolute())
     homedir = pathlib.Path.home()
     os.chdir(homedir)
@@ -334,7 +332,7 @@ def copy_tasks_tests_from_repo(tasks, tests):
 
     clone_or_pull_task_repo()
 
-    course_tasks_repo_dir = ".pyneng-course-tasks"
+    course_tasks_repo_dir = ".advpyneng-course-tasks"
     homedir = pathlib.Path.home()
     os.chdir(
         os.path.join(homedir, course_tasks_repo_dir, "exercises", current_chapter_name)
@@ -426,7 +424,7 @@ def copy_chapters_from_repo(chapters_list):
     source_pth = str(pathlib.Path().absolute())
     clone_or_pull_task_repo()
 
-    course_tasks_repo_dir = ".pyneng-course-tasks"
+    course_tasks_repo_dir = ".advpyneng-course-tasks"
     homedir = pathlib.Path.home()
     os.chdir(os.path.join(homedir, course_tasks_repo_dir, "exercises"))
     copy_chapters(source_pth, chapters_list)

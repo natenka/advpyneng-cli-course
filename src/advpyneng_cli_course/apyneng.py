@@ -81,7 +81,7 @@ def _get_tasks_tests_from_cli(self, value):
             self.fail(
                 red(
                     f"Данный формат не поддерживается {task}. "
-                    "Допустимые форматы в pyneng --help"
+                    "Допустимые форматы в apyneng --help"
                 )
             )
     tasks_with_tests = set([test.replace("test_", "") for test in test_files])
@@ -139,7 +139,7 @@ class CustomChapterType(click.ParamType):
                 self.fail(
                     red(
                         f"Данный формат не поддерживается {chapter}. "
-                        "Допустимые форматы в pyneng --help"
+                        "Допустимые форматы в apyneng --help"
                     )
                 )
         return sorted(chapter_dir_list)
@@ -159,15 +159,6 @@ def print_docs_with_pager(width=90):
 )
 @click.argument("tasks", default="all", type=CustomTasksType())
 @click.option(
-    "--answer",
-    "-a",
-    is_flag=True,
-    help=(
-        "Скопировать ответы для заданий, которые прошли тесты. При добавлении этого "
-        "флага, не выводится traceback для тестов."
-    ),
-)
-@click.option(
     "--check",
     "-c",
     is_flag=True,
@@ -177,7 +168,7 @@ def print_docs_with_pager(width=90):
         "не выводится traceback для тестов."
     ),
 )
-@click.option("--docs", is_flag=True, help="Показать документацию pyneng")
+@click.option("--docs", is_flag=True, help="Показать документацию apyneng")
 @click.option("--test-token", is_flag=True, help="Проверить работу токена")
 @click.option(
     "--save-all",
@@ -212,7 +203,6 @@ def print_docs_with_pager(width=90):
 def cli(
     tasks,
     disable_verbose,
-    answer,
     check,
     debug,
     default_branch,
@@ -230,38 +220,36 @@ def cli(
 
     \b
     Эти флаги не запускают тестирование заданий
-     pyneng --docs                 Показать документацию pyneng
-     pyneng --test-token           Проверить работу токена
-     pyneng --save-all             Сохранить на GitHub все измененные файлы в текущем каталоге
-     pyneng --update               Обновить все задания и тесты в текущем каталоге
-     pyneng --update --test-only   Обновить только тесты в текущем каталоге
-     pyneng 1,2 --update           Обновить задания 1 и 2 и соответствующие тесты в текущем каталоге
-     pyneng --update-chapters 4-5  Обновить разделы 4 и 5 (каталоги будут удалены и скопированы обновленные версии)
+     apyneng --docs                 Показать документацию apyneng
+     apyneng --test-token           Проверить работу токена
+     apyneng --save-all             Сохранить на GitHub все измененные файлы в текущем каталоге
+     apyneng --update               Обновить все задания и тесты в текущем каталоге
+     apyneng --update --test-only   Обновить только тесты в текущем каталоге
+     apyneng 1,2 --update           Обновить задания 1 и 2 и соответствующие тесты в текущем каталоге
+     apyneng --update-chapters 4-5  Обновить разделы 4 и 5 (каталоги будут удалены и скопированы обновленные версии)
 
     \b
     Запуск тестирования заданий, просмотр ответов, сдача на проверку
     \b
-        pyneng              запустить все тесты для текущего раздела
-        pyneng 1,2a,5       запустить тесты для заданий 1, 2a и 5
-        pyneng 1,2*         запустить тесты для заданий 1, все задания 2 с буквами и без
-        pyneng 1,3-5        запустить тесты для заданий 1, 3, 4, 5
-        pyneng 1-5 -a       запустить тесты и записать ответы на задания,
-                            которые прошли тесты, в файлы answer_task_x.py
-        pyneng 1-5 -c       запустить тесты и сдать на проверку задания,
-                            которые прошли тесты.
-        pyneng 1-5 -c --all запустить тесты и сдать на проверку задания,
-                            которые прошли тесты, но при этом загрузить на github все изменения
-                            в текущем каталоге
+        apyneng              запустить все тесты для текущего раздела
+        apyneng 1,2a,5       запустить тесты для заданий 1, 2a и 5
+        apyneng 1,2*         запустить тесты для заданий 1, все задания 2 с буквами и без
+        apyneng 1,3-5        запустить тесты для заданий 1, 3, 4, 5
+        apyneng 1-5 -c       запустить тесты и сдать на проверку задания,
+                             которые прошли тесты.
+        apyneng 1-5 -c --all запустить тесты и сдать на проверку задания,
+                             которые прошли тесты, но при этом загрузить на github все изменения
+                             в текущем каталоге
 
     \b
-    Подробнее в документации: pyneng --docs
+    Подробнее в документации: apyneng --docs
     """
     global DEFAULT_BRANCH
     if default_branch != "main":
         DEFAULT_BRANCH = default_branch
     token_error = red(
         "Для сдачи заданий на проверку надо сгенерировать токен github. "
-        "Подробнее в инструкции: https://pyneng.natenka.io/docs/pyneng-prepare/"
+        "Подробнее в инструкции: https://advpyneng.natenka.io/docs/apyneng-prepare/"
     )
     if docs:
         print_docs_with_pager()
@@ -316,9 +304,9 @@ def cli(
     else:
         pytest_args = [*pytest_args_common, "-vv", "--diff-width=120"]
 
-    # если добавлен флаг -a или -c нет смысла выводить traceback,
+    # если добавлен флаг -c нет смысла выводить traceback,
     # так как скорее всего задания уже проверены предыдущими запусками.
-    if answer or check:
+    if check:
         pytest_args = [*pytest_args_common, "--tb=no"]
 
     # запуск pytest
@@ -329,10 +317,6 @@ def cli(
     passed_tasks = parse_json_report(json_plugin.report)
 
     if passed_tasks or tasks_without_tests:
-        # скопировать ответы в файлы answer_task_x.py
-        if answer:
-            copy_answers(passed_tasks)
-
         # сдать задания на проверку через github API
         if check:
             token = os.environ.get("GITHUB_TOKEN")

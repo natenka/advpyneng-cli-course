@@ -77,6 +77,7 @@ def working_dir_clean():
 
 def show_git_diff_short():
     git_diff = call_command("git diff --stat")
+    git_status = call_command("git status")
 
 
 def git_push(branch):

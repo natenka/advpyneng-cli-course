@@ -14,7 +14,7 @@ import github
 from rich import print as rprint
 from rich.padding import Padding
 
-from advpyneng_cli_course.exceptions import PynengError
+from advpyneng_cli_course.exceptions import AdvPynengError
 from advpyneng_cli_course import (
     ANSWERS_URL,
     TASKS_URL,
@@ -112,7 +112,7 @@ def get_repo(search_pattern=STUDENT_REPO_TEMPLATE):
         repo = repo_match.group()
         return repo
     else:
-        raise PynengError(
+        raise AdvPynengError(
             red(
                 f"Не найден репозиторий {STUDENT_REPO_TEMPLATE}. "
                 f"pyneng надо вызывать в репозитории подготовленном для курса."
@@ -155,7 +155,7 @@ def post_comment_to_last_commit(msg, repo, delta_days=60, ignore_ssl_cert=False)
         g = github.Github(token, verify=verify_ssl_cert)
         repo_obj = g.get_repo(repo_name)
     except github.GithubException:
-        raise PynengError(
+        raise AdvPynengError(
             red("Аутентификация по токену не прошла. Задание не сдано на проверку")
         )
     else:
@@ -259,13 +259,13 @@ def git_clone_repo(repo_url, dst_dir):
     )
     if returncode != 0:
         if "could not resolve host" in stderr.lower():
-            raise PynengError(
+            raise AdvPynengError(
                 red(
                     "Не получилось клонировать репозиторий. Возможно нет доступа в интернет?"
                 )
             )
         else:
-            raise PynengError(red(f"Не получилось скопировать файлы. {stderr}"))
+            raise AdvPynengError(red(f"Не получилось скопировать файлы. {stderr}"))
 
 
 def copy_answers(passed_tasks):

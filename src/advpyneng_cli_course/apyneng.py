@@ -16,7 +16,7 @@ from advpyneng_cli_course import (
     DB_TASK_DIRS,
     TASK_NUMBER_DIR_MAP,
 )
-from advpyneng_cli_course.exceptions import PynengError
+from advpyneng_cli_course.exceptions import AdvPynengError
 from advpyneng_cli_course.pyneng_docs import DOCS
 from advpyneng_cli_course.utils import (
     red,
@@ -337,7 +337,7 @@ def cli(
         if check:
             token = os.environ.get("GITHUB_TOKEN")
             if not token:
-                raise PynengError(token_error)
+                raise AdvPynengError(token_error)
             send_tasks_to_check(
                 passed_tasks + tasks_without_tests,
                 git_add_all=git_add_all_to_github,

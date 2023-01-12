@@ -17,7 +17,7 @@ from advpyneng_cli_course import (
     TASK_NUMBER_DIR_MAP,
 )
 from advpyneng_cli_course.exceptions import AdvPynengError
-from advpyneng_cli_course.pyneng_docs import DOCS
+from advpyneng_cli_course.apyneng_docs import DOCS
 from advpyneng_cli_course.utils import (
     red,
     green,
@@ -199,7 +199,7 @@ def print_docs_with_pager(width=90):
     help="Добавить git add .",
 )
 @click.option("--ignore-ssl-cert", default=False)
-@click.version_option(version="1.0.0")
+@click.version_option(version="1.1.0")
 def cli(
     tasks,
     disable_verbose,
